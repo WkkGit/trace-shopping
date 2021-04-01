@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkk.mapper.ProduceInfoMapper">
+    <resultMap id="BaseResultMap" type="com.wkk.pojo.DO.ProduceInfoDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="produce_name" property="produceName" jdbcType="VARCHAR"/>
+        <id column="produce_url" property="produceUrl" jdbcType="VARCHAR"/>
+        <id column="introduction" property="introduction" jdbcType="VARCHAR"/>
+        <id column="produce_price" property="producePrice" jdbcType="DOUBLE"/>
+        <id column="produce_type" property="produceType" jdbcType="INTEGER"/>
+        <id column="stock" property="stock" jdbcType="INTEGER"/>
+        <id column="product_date" property="productDate" jdbcType="VARCHAR"/>
+        <id column="created_at" property="createdAt" jdbcType="VARCHAR"/>
+        <id column="updated_at" property="updatedAt" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="tb">produce_info</sql>
+    <sql id="Base_Column_List">
+        id, produce_name, produce_url, introduction, produce_price, produce_type, stock, product_date, created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.wkk.pojo.DO.ProduceInfoDO" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tb"/>
+        (produce_name, produce_url, introduction, produce_price, produce_type, stock, product_date, created_at, updated_at)
+        values (#{produceName}, #{produceUrl}, #{introduction}, #{producePrice}, #{produceType}, #{stock}, #{productDate}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.wkk.pojo.DO.ProduceInfoDO">
+        update
+        <include refid="tb"/>
+        <set>
+            produce_name = #{produceName},
+            produce_url = #{produceUrl},
+            introduction = #{introduction},
+            produce_price = #{producePrice},
+            produce_type = #{produceType},
+            stock = #{stock},
+            product_date = #{productDate},
+            updated_at = #{updatedAt}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from <include refid="tb"/>
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByName">
+        delete from <include refid="tb"/>
+        where produce_name = #{produceName}
+    </delete>
+
+    <delete id="deleteBatch" parameterType = "java.util.List">
+        delete from <include refid="tb"/>
+        where id in
+        <foreach item="id" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findByName" resultType="com.wkk.pojo.DO.ProduceInfoDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where produce_name = #{produceName}
+    </select>
+
+    <select id="list" resultType="com.wkk.pojo.DO.ProduceInfoDO">
+        select * from <include refid="tb"/>
+    </select>
+
+    <select id="findByParName" resultMap="BaseResultMap" parameterType="String">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where produce_name like CONCAT('%',#{parName},'%')
+    </select>
+
+    <select id="findByProduceType" resultMap="BaseResultMap" parameterType="Integer">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where produce_type = #{produceType}
+    </select>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkk.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.wkk.pojo.DO.UserInfoDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <id column="account" property="account" jdbcType="INTEGER"/>
+        <id column="password" property="password" jdbcType="VARCHAR"/>
+        <id column="salt" property="salt" jdbcType="INTEGER"/>
+        <id column="address" property="address" jdbcType="VARCHAR"/>
+        <id column="phone" property="phone" jdbcType="VARCHAR"/>
+        <id column="status" property="status" jdbcType="INTEGER"/>
+        <id column="gender" property="gender" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="tb">user_info</sql>
+    <sql id="Base_Column_List">
+        id, user_name, account, password, salt, address, phone, status, gender
+    </sql>
+
+    <insert id="insert" parameterType="com.wkk.pojo.DO.UserInfoDO" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tb"/>
+        (user_name, account, password, salt, address, phone, status, gender)
+        values (#{userName}, #{account}, #{password}, #{salt}, #{address}, #{phone}, #{status}, #{gender})
+    </insert>
+
+    <update id="update" parameterType="com.wkk.pojo.DO.UserInfoDO">
+        update
+        <include refid="tb"/>
+        <set>
+            user_name = #{userName},
+            account = #{account},
+            password = #{password},
+            salt = #{salt},
+            address = #{address},
+            phone = #{phone},
+            status = #{status},
+            gender = #{gender}
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="deleteById">
+        update
+        <include refid="tb"/>
+        <set>
+            <if test="status != null">status = 2</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="deleteByAccount">
+        update
+        <include refid="tb"/>
+        <set>
+            <if test="status != null">status = 2</if>
+        </set>
+        where account = #{account}
+    </update>
+
+    <update id="freezeByAccount">
+        update
+        <include refid="tb"/>
+        <set>
+            <if test="status != null">status = 1</if>
+        </set>
+        where account = #{account}
+    </update>
+
+    <update id="unFreezeByAccount">
+        update
+        <include refid="tb"/>
+        <set>
+            <if test="status != null">status = 0</if>
+        </set>
+        where account = #{account}
+    </update>
+
+    <delete id="deleteBatch" parameterType = "java.util.List">
+        delete from <include refid="tb"/>
+        where id in
+        <foreach item="id" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findByAccount" resultType="com.wkk.pojo.DO.UserInfoDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where account = #{account}
+    </select>
+
+    <select id="list" resultType="com.wkk.pojo.DO.UserInfoDO">
+        select * from <include refid="tb"/>
+    </select>
+
+    <select id="findByParName" resultMap="BaseResultMap" parameterType="String">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where user_name like CONCAT('%',#{parName},'%')
+    </select>
+
+</mapper>

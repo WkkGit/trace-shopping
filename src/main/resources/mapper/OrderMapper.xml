@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkk.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.wkk.pojo.BO.Order">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="delivery_no" property="deliveryNo" jdbcType="VARCHAR"/>
+        <id column="user_account" property="userAccount" jdbcType="INTEGER"/>
+        <id column="address" property="address" jdbcType="VARCHAR"/>
+        <id column="total_price" property="totalPrice" jdbcType="DOUBLE"/>
+        <id column="pay_status" property="payStatus" jdbcType="VARCHAR"/>
+        <id column="send_status" property="sendStatus" jdbcType="VARCHAR"/>
+        <id column="created_at" property="createdAt" jdbcType="VARCHAR"/>
+        <id column="updated_at" property="updatedAt" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="tb">orders</sql>
+    <sql id="Base_Column_List">
+        id, delivery_no, user_account, address, total_price, pay_status, send_status , created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.wkk.pojo.BO.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tb"/>
+        (delivery_no, user_account, address, total_price, pay_status, send_status , created_at, updated_at)
+        values (#{deliveryNo}, #{userAccount}, #{address}, #{totalPrice}, #{payStatus}, #{sendStatus}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.wkk.pojo.BO.Order">
+        update
+        <include refid="tb"/>
+        <set>
+            delivery_no = #{deliveryNo},
+            user_account = #{userAccount},
+            address = #{address},
+            pay_status = #{payStatus},
+            send_status = #{sendStatus},
+            total_price = #{totalPrice},
+            updated_at = #{updatedAt}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from <include refid="tb"/>
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByDeliveryNo">
+        delete from <include refid="tb"/>
+        where delivery_no = #{deliveryNo}
+    </delete>
+
+    <delete id="deleteByAccount">
+        delete from <include refid="tb"/>
+        where user_account = #{userAccount}
+    </delete>
+
+    <select id="findByUserAccount" resultType="com.wkk.pojo.BO.Order">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where user_account = #{userAccount}
+    </select>
+
+    <select id="findById" resultType="com.wkk.pojo.BO.Order">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where id = #{id}
+    </select>
+
+    <select id="findByDeliveryNo" resultType="com.wkk.pojo.BO.Order">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where delivery_no = #{deliveryNo}
+    </select>
+
+    <select id="list" resultType="com.wkk.pojo.BO.Order">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+    </select>
+</mapper>

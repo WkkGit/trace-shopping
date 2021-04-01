@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkk.mapper.GrowRecordMapper">
+    <resultMap id="BaseResultMap" type="com.wkk.pojo.DO.GrowRecordDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="produce_name" property="produceName" jdbcType="VARCHAR"/>
+        <id column="seed_quality" property="seedQuality" jdbcType="INTEGER"/>
+        <id column="grow_land" property="growLand" jdbcType="VARCHAR"/>
+        <id column="grow_time" property="growTime" jdbcType="VARCHAR"/>
+        <id column="reap_time" property="reapTime" jdbcType="VARCHAR"/>
+        <id column="created_at" property="createdAt" jdbcType="VARCHAR"/>
+        <id column="updated_at" property="updatedAt" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="tb">grow_record</sql>
+    <sql id="Base_Column_List">
+        id, produce_name, seed_quality, grow_land, grow_time, reap_time, created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.wkk.pojo.DO.GrowRecordDO" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tb"/>
+        (produce_name, seed_quality, grow_land, grow_time, reap_time, created_at, updated_at)
+        values (#{produceName}, #{seedQuality}, #{growLand}, #{growTime}, #{reapTime}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.wkk.pojo.DO.GrowRecordDO">
+        update
+        <include refid="tb"/>
+        <set>
+            produce_name = #{produceName},
+            seed_quality = #{seedQuality},
+            grow_land = #{growLand},
+            grow_time = #{growTime},
+            reap_time = #{reapTime},
+            updated_at = #{updatedAt}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from <include refid="tb"/>
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByProduceName">
+        delete from <include refid="tb"/>
+        where produce_name = #{produceName}
+    </delete>
+
+    <delete id="deleteBatch" parameterType = "java.util.List">
+        delete from <include refid="tb"/>
+        where id in
+        <foreach item="id" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findByProduceName" resultType="com.wkk.pojo.DO.GrowRecordDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where produce_name = #{produceName}
+    </select>
+
+    <select id="list" resultType="com.wkk.pojo.DO.GrowRecordDO">
+        select * from <include refid="tb"/>
+    </select>
+
+    <select id="findByParName" resultMap="BaseResultMap" parameterType="String">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where produce_name like CONCAT('%',#{parName},'%')
+    </select>
+
+    <select id="findByGrowLand" resultMap="BaseResultMap" parameterType="String">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where grow_land = #{growLand}
+    </select>
+
+</mapper>

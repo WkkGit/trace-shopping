@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkk.mapper.ShoppingCarMapper">
+    <resultMap id="BaseResultMap" type="com.wkk.pojo.DO.ShoppingCarDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="user_account" property="userAccount" jdbcType="INTEGER"/>
+        <id column="produce_url" property="produceUrl" jdbcType="VARCHAR"/>
+        <id column="produce_name" property="produceName" jdbcType="VARCHAR"/>
+        <id column="produce_price" property="producePrice" jdbcType="DOUBLE"/>
+        <id column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <id column="total_price" property="totalPrice" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <sql id="tb">shopping_car</sql>
+    <sql id="Base_Column_List">
+        id, user_account, produce_url, produce_name, produce_price, quantity, total_price
+    </sql>
+
+    <insert id="insert" parameterType="com.wkk.pojo.DO.ShoppingCarDO" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tb"/>
+        (user_account, produce_url, produce_name, produce_price, quantity, total_price)
+        values (#{userAccount}, #{produceUrl}, #{produceName}, #{producePrice}, #{quantity}, #{totalPrice})
+    </insert>
+
+    <update id="update" parameterType="com.wkk.pojo.DO.ShoppingCarDO">
+        update
+        <include refid="tb"/>
+        <set>
+            user_account = #{userAccount},
+            produce_name = #{produceName},
+            produce_url = #{produceUrl},
+            produce_price = #{producePrice},
+            quantity = #{quantity},
+            total_price = #{totalPrice}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from <include refid="tb"/>
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByAccount">
+        delete from <include refid="tb"/>
+        where user_account = #{userAccount}
+    </delete>
+
+    <delete id="deleteByAccountAndName">
+        delete from <include refid="tb"/>
+        where user_account = #{userAccount} and produce_name = #{produceName}
+    </delete>
+
+    <delete id="deleteBatch" parameterType = "java.util.List">
+        delete from <include refid="tb"/>
+        where id in
+        <foreach item="id" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findByUserAccount" resultType="com.wkk.pojo.DO.ShoppingCarDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where user_account = #{userAccount}
+    </select>
+
+    <select id="findByNameAndAccount" resultType="com.wkk.pojo.DO.ShoppingCarDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where produce_name = #{produceName} and user_account = #{userAccount}
+    </select>
+
+    <select id="list" resultType="com.wkk.pojo.DO.ShoppingCarDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+    </select>
+</mapper>

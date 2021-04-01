@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wkk.mapper.ProcessRecordMapper">
+    <resultMap id="BaseResultMap" type="com.wkk.pojo.DO.ProcessRecordDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="produce_name" property="produceName" jdbcType="VARCHAR"/>
+        <id column="process_name" property="processName" jdbcType="VARCHAR"/>
+        <id column="process_land" property="processLand" jdbcType="VARCHAR"/>
+        <id column="process_time" property="processTime" jdbcType="VARCHAR"/>
+        <id column="created_at" property="createdAt" jdbcType="VARCHAR"/>
+        <id column="updated_at" property="updatedAt" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="tb">process_record</sql>
+    <sql id="Base_Column_List">
+        id, produce_name, process_name, process_land, process_time, created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.wkk.pojo.DO.ProcessRecordDO" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tb"/>
+        (produce_name, process_name, process_land, process_time, created_at, updated_at)
+        values (#{produceName}, #{processName}, #{processLand}, #{processTime}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.wkk.pojo.DO.ProcessRecordDO">
+        update
+        <include refid="tb"/>
+        <set>
+            produce_name = #{produceName},
+            process_name = #{processName},
+            process_land = #{processLand},
+            process_time = #{processTime},
+            updated_at = #{updatedAt}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from <include refid="tb"/>
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByProduceName">
+        delete from <include refid="tb"/>
+        where produce_name = #{produceName}
+    </delete>
+
+    <delete id="deleteBatch" parameterType = "java.util.List">
+        delete from <include refid="tb"/>
+        where id in
+        <foreach item="id" collection="ids" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findByProduceName" resultType="com.wkk.pojo.DO.ProcessRecordDO">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/> where produce_name = #{produceName}
+    </select>
+
+    <select id="list" resultType="com.wkk.pojo.DO.ProcessRecordDO">
+        select * from <include refid="tb"/>
+    </select>
+
+    <select id="findByParName" resultMap="BaseResultMap" parameterType="String">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where produce_name like CONCAT('%',#{parName},'%')
+    </select>
+
+    <select id="findByProcessLand" resultMap="BaseResultMap" parameterType="String">
+        select <include refid="Base_Column_List"/> from <include refid="tb"/>
+        where process_land = #{processLand}
+    </select>
+
+</mapper>
