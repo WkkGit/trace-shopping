@@ -79,19 +79,10 @@ public class UserController {
     @RequestMapping(value = "/login")
     public String login(Integer account, String password, HttpSession session, Model model) {
 
-        UserInfo user = (UserInfo) session.getAttribute("user");
-        if(user != null){
-            if(user.getAccount().equals(666666)){
-                return "admin/index";
-            }else{
-                return "shop/index";
-            }
-        } else {
-            user = userService.findByAccount(account);;
-        }
+        UserInfo user =  userService.findByAccount(account);;
         Integer salt = user.getSalt();
         String MD5Password = MD5.encodeByMD5(password+salt);
-        if (user == null || !user.getPassword().equals(MD5Password)) {
+        if (user == null || !user.getPassword().equals(MD5Password) || !user.getStatus().getCode().equals(0)) {
             return "login";
         }
         if(account == 666666){

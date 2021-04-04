@@ -59,12 +59,6 @@ public class AdminOrderController {
         return "admin/order/order-list";
     }
 
-    @RequestMapping("/order/detail/{deliveryNo}")
-    public String toInsertPage(@PathVariable("deliveryNo") String deliveryNo, Model model){
-        List<OrderDetail> orderDetailList = orderDetailService.findByDeliveryNo(deliveryNo);
-        model.addAttribute("orderDetailList", orderDetailList);
-        return "admin/order/order-detail";
-    }
 
     @RequestMapping("/order/send/{deliveryNo}")
     public String sendOrder(@PathVariable("deliveryNo") String deliveryNo){
@@ -72,5 +66,13 @@ public class AdminOrderController {
         order.setSendStatus("已发货");
         orderService.updatedOrder(order);
         return "forward:/admin/order/list";
+    }
+
+
+    @RequestMapping("/order/detail/{deliveryNo}")
+    public String toInsertPage(@PathVariable("deliveryNo") String deliveryNo, Model model){
+        List<OrderDetail> orderDetailList = orderDetailService.findByDeliveryNo(deliveryNo);
+        model.addAttribute("orderDetailList", orderDetailList);
+        return "admin/order/order-detail";
     }
 }
